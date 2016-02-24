@@ -8,7 +8,8 @@
     <xsd:element name="config" type="config" />
 
     <xsd:complexType name="config">
-        <xsd:all>
+        <xsd:choice maxOccurs="unbounded">
+            <xsd:element name="trusted-header" type="trusted_header" minOccurs="0" maxOccurs="1" />
             <xsd:element name="assets" type="assets" minOccurs="0" maxOccurs="1" />
             <xsd:element name="form" type="form" minOccurs="0" maxOccurs="1" />
             <xsd:element name="csrf-protection" type="csrf_protection" minOccurs="0" maxOccurs="1" />
@@ -25,7 +26,7 @@
             <xsd:element name="property-access" type="property_access" minOccurs="0" maxOccurs="1" />
             <xsd:element name="serializer" type="serializer" minOccurs="0" maxOccurs="1" />
             <xsd:element name="property-info" type="property_info" minOccurs="0" maxOccurs="1" />
-        </xsd:all>
+        </xsd:choice>
 
         <xsd:attribute name="http-method-override" type="xsd:boolean" />
         <xsd:attribute name="trusted-proxies" type="xsd:string" />
@@ -33,6 +34,11 @@
         <xsd:attribute name="secret" type="xsd:string" />
         <xsd:attribute name="default-locale" type="xsd:string" />
         <xsd:attribute name="test" type="xsd:boolean" />
+    </xsd:complexType>
+
+    <xsd:complexType name="trusted_header">
+        <xsd:attribute name="key" type="xsd:string" />
+        <xsd:attribute name="name" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="form">

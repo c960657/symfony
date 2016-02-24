@@ -79,6 +79,9 @@ class FrameworkExtension extends Extension
         $container->setParameter('kernel.http_method_override', $config['http_method_override']);
         $container->setParameter('kernel.trusted_hosts', $config['trusted_hosts']);
         $container->setParameter('kernel.trusted_proxies', $config['trusted_proxies']);
+        if (isset($config['trusted_headers'])) {
+            $container->setParameter('kernel.trusted_headers', $config['trusted_headers']);
+        }
         $container->setParameter('kernel.default_locale', $config['default_locale']);
 
         if (!empty($config['test'])) {

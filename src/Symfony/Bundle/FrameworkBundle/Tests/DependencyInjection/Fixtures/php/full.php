@@ -11,6 +11,7 @@ $container->loadFromExtension('framework', array(
     ),
     'http_method_override' => false,
     'trusted_proxies' => array('127.0.0.1', '10.0.0.1'),
+    'trusted_headers' => array('client_ip' => 'X-IP', 'client_port' => 'X-Port', 'client_proto' => null),
     'esi' => array(
         'enabled' => true,
     ),

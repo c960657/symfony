@@ -14,6 +14,7 @@ namespace Symfony\Bundle\FrameworkBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * FrameworkExtension configuration structure.
@@ -51,6 +52,7 @@ class Configuration implements ConfigurationInterface
                     return $v;
                 })
             ->end()
+            ->fixXmlConfig('trusted_header')
             ->children()
                 ->scalarNode('secret')->end()
                 ->scalarNode('http_method_override')
@@ -85,6 +87,28 @@ class Configuration implements ConfigurationInterface
                             })
                             ->thenInvalid('Invalid proxy IP "%s"')
                         ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('trusted_headers')
+                    ->info(
+                        "The HTTP headers to trust when using a trusted proxy server.\n".
+                        "If this node exists, only the specified headers are trusted.\n".
+                        "Otherwise the defaults from Request are used.")
+                    ->beforeNormalization()
+                        ->ifTrue(function($v) { return isset($v[0]); })
+                        ->then(function ($v) {
+                            $headers = array();
+                            foreach ($v as $header) {
+                                $headers[$header['key']] = isset($header['name']) ? $header['name'] : null;
+                            }
+                            return $headers;
+                        })->end()
+                    ->children()
+                        ->scalarNode(Request::HEADER_FORWARDED)->defaultNull()->end()
+                        ->scalarNode(Request::HEADER_CLIENT_IP)->defaultNull()->end()
+                        ->scalarNode(Request::HEADER_CLIENT_HOST)->defaultNull()->end()
+                        ->scalarNode(Request::HEADER_CLIENT_PORT)->defaultNull()->end()
+                        ->scalarNode(Request::HEADER_CLIENT_PROTO)->defaultNull()->end()
                     ->end()
                 ->end()
                 ->scalarNode('ide')->defaultNull()->end()

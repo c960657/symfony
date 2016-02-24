@@ -61,6 +61,13 @@ class FrameworkBundle extends Bundle
         if ($trustedHosts = $this->container->getParameter('kernel.trusted_hosts')) {
             Request::setTrustedHosts($trustedHosts);
         }
+
+        if ($this->container->hasParameter('kernel.trusted_headers')) {
+            $trustedHeaders = $this->container->getParameter('kernel.trusted_headers');
+            foreach ($trustedHeaders as $key => $name) {
+               Request::setTrustedHeaderName($key, $name);
+            }
+        }
     }
 
     public function build(ContainerBuilder $container)
